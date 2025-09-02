@@ -84,37 +84,85 @@ class RecordView extends GetView<RecordController> {
   }
 
   Widget _buildControlButtons() {
+    final isDark = Get.isDarkMode; // true if dark mode
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Obx(() => FloatingActionButton(
-          heroTag: 'discardBtn',
-          onPressed: controller.isRecording.value || controller.recordFilePath.isNotEmpty
-              ? () => controller.discardRecording()
-              : null,
-          backgroundColor: Colors.redAccent,
-          foregroundColor: Colors.white,
-          child: const Icon(Icons.delete_forever),
+        // Discard Button + Text
+        Obx(() => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              heroTag: 'discardBtn',
+              onPressed: controller.isRecording.value || controller.recordFilePath.isNotEmpty
+                  ? () => controller.discardRecording()
+                  : null,
+              backgroundColor: Colors.redAccent,
+              foregroundColor: Colors.white,
+              child: const Icon(Icons.delete_forever),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              "Discard",
+              style: TextStyle(
+                color: isDark ? Colors.deepPurpleAccent : Colors.deepPurpleAccent,
+              ),
+            ),
+          ],
         )),
-        Obx(() => SizedBox(
-          width: 80,
-          height: 80,
-          child: FloatingActionButton(
-            heroTag: 'recordBtn',
-            onPressed: () => controller.toggleRecording(),
-            backgroundColor: controller.isRecording.value ? Colors.red : Get.theme.colorScheme.primary,
-            foregroundColor: Colors.white,
-            child: Icon(controller.isRecording.value ? Icons.stop : Icons.mic, size: 36),
-          ),
+
+        // Record Button + Text
+        Obx(() => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 80,
+              height: 80,
+              child: FloatingActionButton(
+                heroTag: 'recordBtn',
+                onPressed: () => controller.toggleRecording(),
+                backgroundColor: controller.isRecording.value
+                    ? Colors.red
+                    : Get.theme.colorScheme.primary,
+                foregroundColor: Colors.white,
+                child: Icon(
+                  controller.isRecording.value ? Icons.stop : Icons.mic,
+                  size: 36,
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              controller.isRecording.value ? "Stop" : "Record",
+              style: TextStyle(
+                color: isDark ? Colors.deepPurpleAccent : Colors.deepPurpleAccent,
+              ),
+            ),
+          ],
         )),
-        Obx(() => FloatingActionButton(
-          heroTag: 'saveBtn',
-          onPressed: controller.recordFilePath.isNotEmpty && !controller.isRecording.value
-              ? () => controller.saveRecording()
-              : null,
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.white,
-          child: const Icon(Icons.save),
+
+        // Save Button + Text
+        Obx(() => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              heroTag: 'saveBtn',
+              onPressed: controller.recordFilePath.isNotEmpty && !controller.isRecording.value
+                  ? () => controller.saveRecording()
+                  : null,
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              child: const Icon(Icons.save),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              "Save",
+              style: TextStyle(
+                color: isDark ? Colors.deepPurpleAccent : Colors.deepPurpleAccent,
+              ),
+            ),
+          ],
         )),
       ],
     );
@@ -122,74 +170,134 @@ class RecordView extends GetView<RecordController> {
 
   Widget _buildDrawer() {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Get.theme.appBarTheme.backgroundColor,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center, // Center vertically
-              crossAxisAlignment: CrossAxisAlignment.center, // Center horizontally
-              children: [
-                SvgPicture.asset(
-                  'lib/assets/app_icon/voice_recorder_icon.svg',
-                  width: 64, // Adjust size as needed
-                  height: 64,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Get.theme.scaffoldBackgroundColor,
+        ),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            SizedBox(
+              height: 200,
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: Get.isDarkMode
+                        ? [Colors.blueGrey[900]!, Colors.blueGrey[800]!]
+                        : [Get.theme.colorScheme.primary, Get.theme.colorScheme.secondary],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'App Version 1.0',
-                  style: Get.textTheme.bodyMedium?.copyWith(color: Colors.white),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: SvgPicture.asset(
+                        'lib/assets/app_icon/voice_recorder_icon.svg',
+                        width: 80,
+                        height: 80,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'App Version 1.0',
+                      style: Get.textTheme.titleSmall?.copyWith(
+                        color: Get.isDarkMode ? Colors.white70 : Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-          ListTile(
-            leading: Obx(() => Icon(
-              _storageService.themeMode == ThemeMode.dark ? Icons.dark_mode : Icons.light_mode,
-              color: Get.theme.iconTheme.color,
-            )),
-            title: Text(
-              'Appearance',
-              style: Get.textTheme.bodyLarge,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  leading: Obx(() => Icon(
+                    _storageService.themeMode == ThemeMode.dark ? Icons.dark_mode : Icons.light_mode,
+                    color: Get.theme.iconTheme.color,
+                  )),
+                  title: Text(
+                    'Appearance',
+                    style: Get.textTheme.titleMedium,
+                  ),
+                  trailing: Obx(() => Switch(
+                    value: _storageService.themeMode == ThemeMode.dark,
+                    onChanged: (value) => controller.toggleTheme(),
+                    activeColor: Get.theme.colorScheme.primary,
+                    activeTrackColor: Get.theme.colorScheme.primary.withOpacity(0.3),
+                    inactiveThumbColor: Get.theme.colorScheme.onSurface,
+                    inactiveTrackColor: Get.theme.colorScheme.onSurface.withOpacity(0.3),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  )),
+                ),
+              ),
             ),
-            trailing: Obx(() => Switch(
-              value: _storageService.themeMode == ThemeMode.dark,
-              onChanged: (value) => controller.toggleTheme(),
-              activeColor: Get.theme.colorScheme.primary,
-              activeTrackColor: Get.theme.colorScheme.primary.withOpacity(0.3),
-              inactiveThumbColor: Get.theme.colorScheme.onSurface,
-              inactiveTrackColor: Get.theme.colorScheme.onSurface.withOpacity(0.3),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            )),
-          ),
-          ListTile(
-            leading: Icon(Icons.favorite, color: Get.theme.iconTheme.color),
-            title: Text('Favorites', style: Get.textTheme.bodyLarge),
-            onTap: () {
-              Get.back();
-              controller.navigateToFavoritesScreen();
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.restore_from_trash, color: Get.theme.iconTheme.color),
-            title: Text('Recently Deleted', style: Get.textTheme.bodyLarge),
-            onTap: () {
-              Get.back();
-              controller.navigateToRecentlyDeletedScreen();
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings, color: Get.theme.iconTheme.color),
-            title: Text('About Us', style: Get.textTheme.bodyLarge),
-            onTap: () {
-              Get.back();
-              controller.navigateToAboutUsScreen();
-            },
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  leading: Icon(Icons.favorite, color: Get.theme.iconTheme.color),
+                  title: Text('Favorites', style: Get.textTheme.titleMedium),
+                  onTap: () {
+                    Get.back();
+                    controller.navigateToFavoritesScreen();
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  leading: Icon(Icons.restore_from_trash, color: Get.theme.iconTheme.color),
+                  title: Text('Recently Deleted', style: Get.textTheme.titleMedium),
+                  onTap: () {
+                    Get.back();
+                    controller.navigateToRecentlyDeletedScreen();
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  leading: Icon(Icons.settings, color: Get.theme.iconTheme.color),
+                  title: Text('About Us', style: Get.textTheme.titleMedium),
+                  onTap: () {
+                    Get.back();
+                    controller.navigateToAboutUsScreen();
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

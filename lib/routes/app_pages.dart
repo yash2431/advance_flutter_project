@@ -1,6 +1,7 @@
 // lib/app/routes/app_pages.dart
 import 'package:get/get.dart';
-import 'package:hacky_voice_recorder/modules/about_us/about_us.dart';
+import 'package:hacky_voice_recorder/modules/about_us/about_us_controller.dart';
+import 'package:hacky_voice_recorder/modules/about_us/about_us_view.dart';
 import 'package:hacky_voice_recorder/modules/edit/edit_binding.dart';
 import 'package:hacky_voice_recorder/modules/splash/splash_screen.dart';
 import '../modules/edit/edit_view.dart';
@@ -16,13 +17,11 @@ import 'app_routes.dart'; // This is important for the AppRoutes class
 
 class AppPages {
   // Define the initial route constant
-  static const INITIAL = AppRoutes.RECORD; // Make sure Routes.RECORD exists in app_routes.dart!
+  static const INITIAL =
+      AppRoutes.RECORD; // Make sure Routes.RECORD exists in app_routes.dart!
 
   static final routes = [
-    GetPage(
-        name: AppRoutes.SPLASH,
-        page: () => const SplashScreen()
-    ),
+    GetPage(name: AppRoutes.SPLASH, page: () => const SplashScreen()),
     GetPage(
       name: AppRoutes.RECORD,
       page: () => RecordView(),
@@ -50,7 +49,10 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.ABOUT_US,
-      page: () => AboutUsPage(),
+      page: () => const AboutView(),
+      binding: BindingsBuilder(() {
+        Get.put(AboutController());
+      }),
     ),
     // Add other pages here
   ];

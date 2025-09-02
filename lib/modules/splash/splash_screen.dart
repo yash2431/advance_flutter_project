@@ -4,7 +4,6 @@ import 'package:hacky_voice_recorder/routes/app_routes.dart';
 import 'package:lottie/lottie.dart';
 import 'connectivity_controller.dart';
 
-
 // Splash screen widget with dynamic animation and WiFi status
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,7 +12,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
 
   @override
@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
             right: 0,
             child: Center(
               child: Image.asset(
-                'lib/assets/logos/Screenshot 2025-08-20 at 17.02.03_223faced.jpg', // Update this path to your saved image
+                'lib/assets/logos/Gemini_Generated_Image_30w8wq30w8wq30w8.png', // Update this path to your saved image
                 width: double.infinity, // Adjust width as needed
                 height: 100, // Adjust height as needed
                 fit: BoxFit.contain,
@@ -107,15 +107,17 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
           Positioned(
             top: 40,
             right: 20,
-            child: Obx(() => Icon(
-              connectivityController.isConnected.value
-                  ? Icons.wifi
-                  : Icons.wifi_off,
-              color: connectivityController.isConnected.value
-                  ? Colors.green.shade800
-                  : Colors.red,
-              size: 30,
-            )),
+            child: Obx(
+              () => Icon(
+                connectivityController.isConnected.value
+                    ? Icons.wifi
+                    : Icons.wifi_off,
+                color: connectivityController.isConnected.value
+                    ? Colors.green.shade800
+                    : Colors.red,
+                size: 30,
+              ),
+            ),
           ),
         ],
       ),

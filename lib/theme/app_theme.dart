@@ -95,7 +95,7 @@ abstract class AppTheme {
       headlineMedium: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold), // Light for contrast on dark background
       headlineSmall: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600), // Light for contrast on dark background
       bodyLarge: TextStyle(color: Colors.grey), // Light for contrast on dark background
-      bodyMedium: TextStyle(color: Colors.black), // Light for contrast on dark background
+      bodyMedium: TextStyle(color: Colors.grey), // Light for contrast on dark background
       bodySmall: TextStyle(color: Colors.black), // Light for contrast on dark background
       labelLarge: TextStyle(color: Colors.black, fontWeight: FontWeight.w600), // Light for contrast on dark background
       labelMedium: TextStyle(color: Colors.black), // Light for contrast on dark background
